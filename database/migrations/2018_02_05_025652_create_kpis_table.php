@@ -18,6 +18,7 @@ class CreateKpisTable extends Migration
             $table->text('name');
             $table->varchar('name_short');
             $table->integer('kpi_type_id');
+            $table->integer('kpi_source_id');
             $table->integer("user_id");
             $table->timestamps();
         });
