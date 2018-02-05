@@ -22,3 +22,5 @@ Route::get('/test', function () {
 Route::get('/tester', function () {
     return view('welcome');
 });
+
+Route::get('/kpi','KpiController@index');
