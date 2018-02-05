@@ -20,7 +20,7 @@ Route::get('/test', function () {
 });
 
 Route::get('/tester', function () {
-    return view('welcome');
+    return view('main.detail');
 });
 
 Route::get('/kpi','KpiController@index');
