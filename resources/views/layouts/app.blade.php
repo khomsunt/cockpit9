@@ -76,6 +76,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @guest
+                            <li><a href="{{ route('typebooks') }}">ประเภทหนังสือ</a></li>
                             <li><a href="{{url('/about')}}">เกี่ยวกับ</a></li>
                             <li><a href="{{ route('login') }}">เข้าระบบ</a></li>
                             <li><a href="{{ route('register') }}">ลงทะเบียน</a></li>

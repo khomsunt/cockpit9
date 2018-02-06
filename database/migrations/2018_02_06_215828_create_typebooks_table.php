@@ -14,7 +14,8 @@ class CreateTypebooksTable extends Migration
     public function up()
     {
         Schema::create('typebooks', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id'); //รหัสประเภทหนังสือ
+            $table->string('name'); //รายละเอียดประเภทหนังสือ
             $table->timestamps();
         });
     }

@@ -14,7 +14,12 @@ class CreateBooksTable extends Migration
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id'); //รหัสหนังสือ
+            $table->string('title'); //ชื่อหนังสือ
+            $table->decimal('price',10,2); //ราคา
+            $table->integer('typebooks_id')->unsigned();
+            $table->foreign('typebooks_id')->references('id')->on('typebooks');
+            $table->string('image'); //เก็บชื่อภาพหนังสือ
             $table->timestamps();
         });
     }

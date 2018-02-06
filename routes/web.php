@@ -28,8 +28,11 @@ Route::get('/template', function () {
 
 Route::get('/kpi','KpiController@index');
 
-Route::get('about','SiteController@index');
+Route::get('/about','SiteController@index');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/typebooks','TypeBooksController@index')->name('typebooks');
+Route::get('/typebooks/destroy/{id}','TypeBooksController@destroy');
