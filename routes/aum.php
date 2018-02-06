@@ -11,22 +11,9 @@
 |
 */
 
+Route::get('about','SiteController@index');
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function () {
-    return view('welcome');
-});
-
-Route::get('/tester', function () {
-    return view('welcome');
-});
-
-Route::get('/kpi','KpiController@index');
-
-Route::get('about','SiteController@index');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
