@@ -109,5 +109,6 @@
     </div>
 
     <!-- Scripts -->
+    @yield('footer')
 </body>
 </html>
