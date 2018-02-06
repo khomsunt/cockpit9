@@ -22,6 +22,9 @@ Route::get('/test', function () {
 Route::get('/tester', function () {
     return view('main.detail');
 });
+Route::get('/template', function () {
+    return view('khomsun.template');
+});
 
 Route::get('/kpi','KpiController@index');
 

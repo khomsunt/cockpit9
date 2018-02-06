@@ -12,6 +12,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/tether.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui.js') }}"></script>
+
 </head>
 <body>
     <div id="app">
@@ -36,8 +41,36 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        <li><a href="{{url('/about')}}">เกี่ยวกับ</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{url('/kpi')}}">Action</a></li>
+                                <li class="dropdown-submenu">
+                                    <a class="test" href="#">Another dropdown <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                    <li><a href="{{url('/template')}}">3rd leTTTn</a></li>
+                                    <li><a href="#">3rd level dropdown</a></li>
+                                    <li class="dropdown-submenu">
+                                        <a class="test" href="#">Another dropdown <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                        <li><a href="#">3rd level dropdown</a></li>
+                                        <li><a href="#">3rd level dropdown</a></li>
+                                        </ul>
+                                    </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">One more separated link</a></li>
+                            </ul>
+                        </li>
                     </ul>
+                    <!-- <ul class="nav navbar-nav navbar-right">
+                        </ -->
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
@@ -76,6 +109,5 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
