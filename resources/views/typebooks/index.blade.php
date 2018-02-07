@@ -20,6 +20,7 @@
                             </tr>
                             @endforeach
                         </table>
+                        {!! $typebooks->render() !!}
                     </div>
                 </div>
             </div>

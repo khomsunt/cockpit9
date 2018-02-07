@@ -8,9 +8,14 @@ use App\TypeBooks;//นำเอาโมเดล TypeBooks เข้ามา�
 class TypeBooksController extends Controller
 {
     public function index() {
-        $typebooks = TypeBooks::all(); //แสดงข้อมูลทัง􀀪 หมด
+        //$typebooks = TypeBooks::all(); //แสดงข้อมูลทัง􀀪 หมด
         //$typebooks = TypeBooks::orderBy('id','desc')->get(); //แสดงข้อมูลทัง􀀪 หมดเรียงจากมากไปน้อยโดยใช้ id
 $count = TypeBooks::count(); //นับจำนวนแถวทัง􀀪 หมด
+
+//แบ่งหน้า
+//$typebooks = TypeBooks::simplePaginate(3);
+$typebooks = TypeBooks::paginate(3);
+
 return view('typebooks.index', [
 'typebooks' => $typebooks,
 'count' => $count
