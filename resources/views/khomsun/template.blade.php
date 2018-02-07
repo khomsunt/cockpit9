@@ -24,6 +24,7 @@
  -->
 <script>
 	var config_snap=5;
+	var active_object = null;	
 	var jsondata = {
 		template : [
 		{type : 'div', parent: 'main_con', prop:{attr: {id: 'div_main',class: 'container-fluid bg-warning'}, text:{text: 'div_main'}, css:{}}},
@@ -51,9 +52,7 @@
 				start: function(e){
 					var this_obj=getObjSelection(e);
 					drag_object=$(this_obj).attr("id");
-//alert(drag_object);
-$("#moving_object").html(drag_object);
-
+					$("#moving_object").html(drag_object);
 					setActive($(this_obj));
 					$("#stand_in").addClass("stand_in");					
 					$("#stand_in").width('0px');
@@ -126,7 +125,7 @@ $("#moving_object").html(drag_object);
 
 
 
-		var div = function(params){
+		var dwardObj = function(params){
 			var var_param='';
 			$.each(params,function(key,value){
 				if (typeof(value)=='object'){
@@ -164,33 +163,35 @@ $("#moving_object").html(drag_object);
 						$(form_group_label).appendTo(form_group_div);
 						$(new_div).appendTo(form_group_div);
 						$(form_group_div).draggable(dragOption);
+						$(form_group_div).attr("objectType",this.type);
 						return form_group_div;
 					}else{
 						$(new_div).addClass('draggable');
 						$(new_div).draggable(dragOption);
+						$(new_div).attr("objectType",this.type);
 						return new_div;
-
-
 					}
 				}else{
 					$(new_div).addClass('draggable');
 					$(new_div).draggable(dragOption);
+					$(new_div).attr("objectType",this.type);
 					return new_div;
 				}
 
 			};
 			this.getId = function(){
 				console.log(this.id);
+			};
+			this.getType = function(){
+				return this.type;
 			}
 		}
 
 		$.each(jsondata.template,function(key,value){
-			var obj1 = "var div1 = new div(this);";
-			eval(obj1);
-			// div1.create1();
-			console.log(div1.create1());
-			$(div1.create1()).appendTo((this.parent=='')?"body":$("#"+this.parent));
-
+			let dwardObjId=this.prop.attr.id;
+			let newDwardObjId = "var "+dwardObjId+" = new dwardObj(this);";
+			eval(newDwardObjId);
+			$(eval(dwardObjId).create1()).appendTo((this.parent=='')?"body":$("#"+this.parent));
 		});
 
 		$(function(){
@@ -198,24 +199,6 @@ $("#moving_object").html(drag_object);
 			var drag_object = null;
 			var target = null;
 			var insert_type = '';
-			$( "#draggable" ).draggable(dragOption);
-			$( ".draggable" ).draggable(dragOption);
-			// $( ".draggable" ).hover(function() {
-			// 	alert('dfsdfsdf');
-			// 	if (drag_status == true) {
-			// 		alert($(this).attr('id'));
-			// 	}
-			// 	/* Stuff to do when the mouse enters the element */
-			// }, function() {
-			// 	/* Stuff to do when the mouse leaves the element */
-			// });
-
-			//$('#jsondata').append(JSON.stringify(jsondata));
-			// $('.design').click(function(){
-			//alert($(this).attr('id'));
-			// });
-
-
 		    $( "#dialog" ).dialog({
 		      autoOpen: false,
 		      show: {
@@ -228,30 +211,35 @@ $("#moving_object").html(drag_object);
 		      }
 		    });
 		 
-		    $(document).dblclick(function(e) {
+		    $(".draggable").dblclick(function(e) {
 		    	var this_obj=getObjSelection(e);
 		    	$("#test").html("dbl_object="+$(this_obj).attr('id'));
 		    	$("#dialog").dialog( "open" );
 		    });
-		    $(document).click(function(e) {
+		    $(".draggable").click(function(e) {
 		    	var this_obj=getObjSelection(e);
 		    	$("#test").html("click="+$(this_obj).attr('id'));
 		    	setActive(this_obj);
 		    });
-		    $("#div_new").click(function(){
-				var obj1 = "var div1 = new div(div_template);";
-				eval(obj1);
-				console.log(div1.create1());
-				$(div1.create1()).appendTo((div_template.parent=='')?"body":$("#"+div_template.parent));
-			});
 		    $("#input_text_new").click(function(){
-				var obj1 = "var div1 = new div(input_text_template);";
+				var obj1 = "var div1 = new dwardObj(input_text_template);";
 				eval(obj1);
-				console.log(div1.create1());
-				$(div1.create1()).appendTo((input_text_template.parent=='')?"body":$("#"+input_text_template.parent));
+				let this_obj=div1.create1();
+				if ($(active_object).attr("objectType")=='div'){
+					$(this_obj).appendTo(active_object);
+				}else{
+					if ($(active_object).attr("objectType")==undefined){
+						$(this_obj).appendTo((input_text_template.parent=='')?"body":$("#"+input_text_template.parent));
+					}else{
+						$(this_obj).insertAfter($(active_object));
+					}
+				}
+				active_object=this_obj;
+				setActive(active_object);
+
 			});
 		    $("#btn_new").click(function(){
-				var obj1 = "var div1 = new div(btn_template);";
+				var obj1 = "var div1 = new dwardObj(btn_template);";
 				eval(obj1);
 				console.log(div1.create1());
 				$(div1.create1()).appendTo((btn_template.parent=='')?"body":$("#"+btn_template.parent));
@@ -260,6 +248,7 @@ $("#moving_object").html(drag_object);
 		function setActive(obj){
 			$("*").removeClass("draged");
 			$(obj).addClass("draged");
+			active_object=obj;
 			//alert("onclick="+$(obj).attr("id"));
 		}
 		function getObjSelection(e){
