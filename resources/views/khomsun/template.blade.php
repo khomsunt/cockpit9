@@ -2,6 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
+	container:<div id="opos">opos</div>
 	<button id="div_new" type="button">div</button>
 	<button id="input_text_new" type="button">input text</button>
 	<button id="btn_new" type="button">button</button>
@@ -18,7 +19,6 @@
 <!-- 	<div id="jsondata"></div>
 	<div id="mpos">mpos</div>
 	moving object<div id="moving_object"></div>
-	container:<div id="opos">opos</div>
 	insert_type:<div id="insert_type">insert_type</div>
 	<div id="test"></div>
  -->
@@ -63,30 +63,29 @@
 					insert_type = '';
 				},
 				drag: function(e) {
-
 					drag_status = true;
-					//alert(drag_status);
 					$("#mpos").html(e.pageX);
 					$.each($(".draggable"),function(){
-//						$("#opos").html($("#opos").html()+" | "+$(this).attr("id")+"x="+$(this).position().left);
 						var offset=$(this).offset();
 						if (($(this).attr('id')!=undefined) && ($(this).attr("id")!=drag_object)){
 							if ((e.pageX>=offset.left) && (e.pageX<=offset.left+$(this).width()) && (e.pageY>=offset.top) && (e.pageY<=offset.top+$(this).height())){
 								target=$(this);
-//alert(target.attr('id'));								
 							}
 						}
-
-
 					});
-
 					offset=target.offset();
-					$('#opos').html(drag_object+"->"+target.attr("id")+" X="+e.pageX+" Y="+e.pageY+" XY1="+offset.left+","+offset.top+" XY2="+(offset.left+target.width())+","+(offset.top+target.height()));
-					
+
+					$('#opos').html(drag_object+" -> "+insert_type+" -> "+target.attr("id")+" X="+e.pageX+" Y="+e.pageY+" XY1="+offset.left+","+offset.top+" XY2="+(offset.left+target.width())+","+(offset.top+target.height()));
 					insert_type=(e.pageY-offset.top<=config_snap)?"upper":(((offset.top+target.height())-e.pageY<=config_snap)?"lower":"in");
+					// if (insert_type=='in'){
+					// 	if (target.arrt("type")!='div'){
+					// 		insert_type='lower';
+					// 	}
+					// }
 					$("#insert_type").html(insert_type);
 					$("#stand_in").width(($("#"+drag_object).width()>$(target).width())?$(target).width():$("#"+drag_object).width());
-					$("#stand_in").height($("#"+drag_object).height());
+//					$("#stand_in").height($("#"+drag_object).height());
+					$("#stand_in").height(30);
 					if (insert_type=='upper'){
 						$("#stand_in").insertBefore($(target));
 					}else if(insert_type=='in'){
@@ -97,7 +96,6 @@
 						$("#stand_in").width('0px');
 						$("#stand_in").height('0px');
 					}
-
 				},
 				stop: function(e) {
 
@@ -166,17 +164,26 @@
 						$(new_div).appendTo(form_group_div);
 						$(form_group_div).draggable(dragOption);
 						$(form_group_div).attr("objectType",this.type);
+						$(form_group_div).css("margin-top","5px");
+						$(form_group_div).css("margin-bottom","5px");
+						$(form_group_div).css("box-shadow","0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 6px 20px 0 rgba(0, 0, 0, 0.19)");
 						return form_group_div;
 					}else{
 						$(new_div).addClass('draggable');
 						$(new_div).draggable(dragOption);
 						$(new_div).attr("objectType",this.type);
+						$(new_div).css("margin-top","5px");
+						$(new_div).css("margin-bottom","5px");
+						
 						return new_div;
 					}
 				}else{
 					$(new_div).addClass('draggable');
 					$(new_div).draggable(dragOption);
 					$(new_div).attr("objectType",this.type);
+					$(new_div).css("margin-top","5px");
+					$(new_div).css("margin-bottom","5px");
+				
 					return new_div;
 				}
 
