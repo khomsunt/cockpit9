@@ -24,7 +24,9 @@
  -->
 <script>
 	var config_snap=5;
-	var active_object = null;	
+	var active_object = null;
+	var array_object_id = [];	
+	var max_object_id = [];
 	var jsondata = {
 		template : [
 		{type : 'div', parent: 'main_con', prop:{attr: {id: 'div_main',class: 'container-fluid bg-warning'}, text:{text: 'div_main'}, css:{}}},
@@ -188,11 +190,27 @@
 		}
 
 		$.each(jsondata.template,function(key,value){
+			let this_id=registerObject(this.type,this.prop.attr.id);
+			this.prop.attr.id=this_id;
 			let dwardObjId=this.prop.attr.id;
 			let newDwardObjId = "var "+dwardObjId+" = new dwardObj(this);";
 			eval(newDwardObjId);
 			$(eval(dwardObjId).create1()).appendTo((this.parent=='')?"body":$("#"+this.parent));
 		});
+
+		function registerObject(type,id){
+			if (id==undefined){
+				if (max_object_id[type]==undefined){
+					max_object_id[type]=0;
+				}
+				max_object_id[type]++;
+				id=type+"_"+max_object_id[type];
+			}else{
+				array_object_id.push(id);				
+			}
+//alert(id);
+			return id;
+		}
 
 		$(function(){
 			var drag_status = false;
@@ -212,8 +230,8 @@
 		    });
 		 
 		    $(".draggable").dblclick(function(e) {
-		    	var this_obj=getObjSelection(e);
-		    	$("#test").html("dbl_object="+$(this_obj).attr('id'));
+		    	var this_obj=active_object;
+				$("#dialog").html(this_obj.attr('id'));
 		    	$("#dialog").dialog( "open" );
 		    });
 		    $(".draggable").click(function(e) {
@@ -222,9 +240,13 @@
 		    	setActive(this_obj);
 		    });
 		    $("#input_text_new").click(function(){
-				var obj1 = "var div1 = new dwardObj(input_text_template);";
-				eval(obj1);
-				let this_obj=div1.create1();
+				input_text_template.prop.attr.id=undefined;
+				let this_id=registerObject(input_text_template.type,input_text_template.prop.attr.id);
+				input_text_template.prop.attr.id=this_id;
+				input_text_template.caption=this_id;
+				let newDwardObj = "var "+this_id+" = new dwardObj(input_text_template);";
+				eval(newDwardObj);
+				let this_obj=eval(this_id).create1()
 				if ($(active_object).attr("objectType")=='div'){
 					$(this_obj).appendTo(active_object);
 				}else{
@@ -236,7 +258,6 @@
 				}
 				active_object=this_obj;
 				setActive(active_object);
-
 			});
 		    $("#btn_new").click(function(){
 				var obj1 = "var div1 = new dwardObj(btn_template);";
