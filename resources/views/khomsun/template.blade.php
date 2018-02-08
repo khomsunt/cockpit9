@@ -7,6 +7,8 @@
 	<button id="input_text_new" type="button">input text</button>
 	<button id="btn_new" type="button">button</button>
 
+	<button id="btn_reset" type="button">clear</button>
+
 	<div id="main_con"></div>
 	<div id="stand_in_store">
 		<div id="stand_in"></div>
@@ -48,7 +50,9 @@
 		var input_text_template={type : 'input', parent:'div_main', caption:'label',  prop:{attr: {id: 'text1',type: 'text', title: 'Enter your text.',placeholder: 'text'}, css:{}}};
 		var btn_template={type : 'input', parent:'div_main', prop:{attr: {id: 'btn1',type: 'button'}, val:{val: 'Btn1'}, css:{width: '60px'}}};
 
-
+var prop=[];
+prop['input']='<label>Text Field</label>
+<div id="frmb-1517903710997-fld-7-holder"><div><div><label for="required-frmb-1517903710997-fld-7">Required</label>';
 
 		var dragOption={
 				start: function(e){
@@ -157,6 +161,7 @@
 						$(form_group_label).text(this.caption);
 						$(form_group_label).attr('for',this.prop.attr.id);
 						$(form_group_label).attr('class','col-form-label');
+						$(form_group_div).css('background-color','#FFFFFF');
 
 						$(form_group_div).addClass('draggable');
 						$(form_group_div).attr("id",$(new_div).attr("id")+"_form_group_div");
@@ -164,26 +169,17 @@
 						$(new_div).appendTo(form_group_div);
 						$(form_group_div).draggable(dragOption);
 						$(form_group_div).attr("objectType",this.type);
-						$(form_group_div).css("margin-top","5px");
-						$(form_group_div).css("margin-bottom","5px");
-						$(form_group_div).css("box-shadow","0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 6px 20px 0 rgba(0, 0, 0, 0.19)");
 						return form_group_div;
 					}else{
 						$(new_div).addClass('draggable');
 						$(new_div).draggable(dragOption);
 						$(new_div).attr("objectType",this.type);
-						$(new_div).css("margin-top","5px");
-						$(new_div).css("margin-bottom","5px");
-						
 						return new_div;
 					}
 				}else{
 					$(new_div).addClass('draggable');
 					$(new_div).draggable(dragOption);
 					$(new_div).attr("objectType",this.type);
-					$(new_div).css("margin-top","5px");
-					$(new_div).css("margin-bottom","5px");
-				
 					return new_div;
 				}
 
@@ -235,9 +231,14 @@
 		        duration: 1000
 		      }
 		    });
+
+			$("#btn_reset").click(function(){
+				$(".draggable").removeAttr('style');
+			});
 		 
 		    $(".draggable").dblclick(function(e) {
 		    	var this_obj=active_object;
+				alert(this_obj.attr("objectType"));
 				$("#dialog").html(this_obj.attr('id'));
 		    	$("#dialog").dialog( "open" );
 		    });
