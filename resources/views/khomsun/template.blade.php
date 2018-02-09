@@ -2,9 +2,12 @@
 @extends('layouts.app')
 
 @section('content')
+	container:<div id="opos">opos</div>
 	<button id="div_new" type="button">div</button>
 	<button id="input_text_new" type="button">input text</button>
 	<button id="btn_new" type="button">button</button>
+
+	<button id="btn_reset" type="button">clear</button>
 
 	<div id="main_con"></div>
 	<div id="stand_in_store">
@@ -18,12 +21,14 @@
 <!-- 	<div id="jsondata"></div>
 	<div id="mpos">mpos</div>
 	moving object<div id="moving_object"></div>
-	container:<div id="opos">opos</div>
 	insert_type:<div id="insert_type">insert_type</div>
 	<div id="test"></div>
  -->
 <script>
 	var config_snap=5;
+	var active_object = null;
+	var array_object_id = [];	
+	var max_object_id = [];
 	var jsondata = {
 		template : [
 		{type : 'div', parent: 'main_con', prop:{attr: {id: 'div_main',class: 'container-fluid bg-warning'}, text:{text: 'div_main'}, css:{}}},
@@ -45,15 +50,15 @@
 		var input_text_template={type : 'input', parent:'div_main', caption:'label',  prop:{attr: {id: 'text1',type: 'text', title: 'Enter your text.',placeholder: 'text'}, css:{}}};
 		var btn_template={type : 'input', parent:'div_main', prop:{attr: {id: 'btn1',type: 'button'}, val:{val: 'Btn1'}, css:{width: '60px'}}};
 
-
+var prop=[];
+prop['input']='<label>Text Field</label>
+<div id="frmb-1517903710997-fld-7-holder"><div><div><label for="required-frmb-1517903710997-fld-7">Required</label>';
 
 		var dragOption={
 				start: function(e){
 					var this_obj=getObjSelection(e);
 					drag_object=$(this_obj).attr("id");
-//alert(drag_object);
-$("#moving_object").html(drag_object);
-
+					$("#moving_object").html(drag_object);
 					setActive($(this_obj));
 					$("#stand_in").addClass("stand_in");					
 					$("#stand_in").width('0px');
@@ -62,30 +67,29 @@ $("#moving_object").html(drag_object);
 					insert_type = '';
 				},
 				drag: function(e) {
-
 					drag_status = true;
-					//alert(drag_status);
 					$("#mpos").html(e.pageX);
 					$.each($(".draggable"),function(){
-//						$("#opos").html($("#opos").html()+" | "+$(this).attr("id")+"x="+$(this).position().left);
 						var offset=$(this).offset();
 						if (($(this).attr('id')!=undefined) && ($(this).attr("id")!=drag_object)){
 							if ((e.pageX>=offset.left) && (e.pageX<=offset.left+$(this).width()) && (e.pageY>=offset.top) && (e.pageY<=offset.top+$(this).height())){
 								target=$(this);
-//alert(target.attr('id'));								
 							}
 						}
-
-
 					});
-
 					offset=target.offset();
-					$('#opos').html(drag_object+"->"+target.attr("id")+" X="+e.pageX+" Y="+e.pageY+" XY1="+offset.left+","+offset.top+" XY2="+(offset.left+target.width())+","+(offset.top+target.height()));
-					
+
+					$('#opos').html(drag_object+" -> "+insert_type+" -> "+target.attr("id")+" X="+e.pageX+" Y="+e.pageY+" XY1="+offset.left+","+offset.top+" XY2="+(offset.left+target.width())+","+(offset.top+target.height()));
 					insert_type=(e.pageY-offset.top<=config_snap)?"upper":(((offset.top+target.height())-e.pageY<=config_snap)?"lower":"in");
+					// if (insert_type=='in'){
+					// 	if (target.arrt("type")!='div'){
+					// 		insert_type='lower';
+					// 	}
+					// }
 					$("#insert_type").html(insert_type);
 					$("#stand_in").width(($("#"+drag_object).width()>$(target).width())?$(target).width():$("#"+drag_object).width());
-					$("#stand_in").height($("#"+drag_object).height());
+//					$("#stand_in").height($("#"+drag_object).height());
+					$("#stand_in").height(30);
 					if (insert_type=='upper'){
 						$("#stand_in").insertBefore($(target));
 					}else if(insert_type=='in'){
@@ -96,7 +100,6 @@ $("#moving_object").html(drag_object);
 						$("#stand_in").width('0px');
 						$("#stand_in").height('0px');
 					}
-
 				},
 				stop: function(e) {
 
@@ -126,7 +129,7 @@ $("#moving_object").html(drag_object);
 
 
 
-		var div = function(params){
+		var dwardObj = function(params){
 			var var_param='';
 			$.each(params,function(key,value){
 				if (typeof(value)=='object'){
@@ -158,64 +161,65 @@ $("#moving_object").html(drag_object);
 						$(form_group_label).text(this.caption);
 						$(form_group_label).attr('for',this.prop.attr.id);
 						$(form_group_label).attr('class','col-form-label');
+						$(form_group_div).css('background-color','#FFFFFF');
 
 						$(form_group_div).addClass('draggable');
 						$(form_group_div).attr("id",$(new_div).attr("id")+"_form_group_div");
 						$(form_group_label).appendTo(form_group_div);
 						$(new_div).appendTo(form_group_div);
 						$(form_group_div).draggable(dragOption);
+						$(form_group_div).attr("objectType",this.type);
 						return form_group_div;
 					}else{
 						$(new_div).addClass('draggable');
 						$(new_div).draggable(dragOption);
+						$(new_div).attr("objectType",this.type);
 						return new_div;
-
-
 					}
 				}else{
 					$(new_div).addClass('draggable');
 					$(new_div).draggable(dragOption);
+					$(new_div).attr("objectType",this.type);
 					return new_div;
 				}
 
 			};
 			this.getId = function(){
 				console.log(this.id);
+			};
+			this.getType = function(){
+				return this.type;
 			}
 		}
 
 		$.each(jsondata.template,function(key,value){
-			var obj1 = "var div1 = new div(this);";
-			eval(obj1);
-			// div1.create1();
-			console.log(div1.create1());
-			$(div1.create1()).appendTo((this.parent=='')?"body":$("#"+this.parent));
-
+			let this_id=registerObject(this.type,this.prop.attr.id);
+			this.prop.attr.id=this_id;
+			let dwardObjId=this.prop.attr.id;
+			let newDwardObjId = "var "+dwardObjId+" = new dwardObj(this);";
+			eval(newDwardObjId);
+			$(eval(dwardObjId).create1()).appendTo((this.parent=='')?"body":$("#"+this.parent));
 		});
+
+		function registerObject(type,id){
+			if (id==undefined){
+				if (max_object_id[type]==undefined){
+					max_object_id[type]=0;
+				}
+				max_object_id[type]++;
+				id=type+"_"+max_object_id[type];
+			}else{
+				array_object_id.push(id);				
+			}
+//alert(id);
+			return id;
+		}
 
 		$(function(){
 			var drag_status = false;
 			var drag_object = null;
 			var target = null;
 			var insert_type = '';
-			$( "#draggable" ).draggable(dragOption);
-			$( ".draggable" ).draggable(dragOption);
-			// $( ".draggable" ).hover(function() {
-			// 	alert('dfsdfsdf');
-			// 	if (drag_status == true) {
-			// 		alert($(this).attr('id'));
-			// 	}
-			// 	/* Stuff to do when the mouse enters the element */
-			// }, function() {
-			// 	/* Stuff to do when the mouse leaves the element */
-			// });
-
-			//$('#jsondata').append(JSON.stringify(jsondata));
-			// $('.design').click(function(){
-			//alert($(this).attr('id'));
-			// });
-
-
 		    $( "#dialog" ).dialog({
 		      autoOpen: false,
 		      show: {
@@ -227,31 +231,44 @@ $("#moving_object").html(drag_object);
 		        duration: 1000
 		      }
 		    });
+
+			$("#btn_reset").click(function(){
+				$(".draggable").removeAttr('style');
+			});
 		 
-		    $(document).dblclick(function(e) {
-		    	var this_obj=getObjSelection(e);
-		    	$("#test").html("dbl_object="+$(this_obj).attr('id'));
+		    $(".draggable").dblclick(function(e) {
+		    	var this_obj=active_object;
+				alert(this_obj.attr("objectType"));
+				$("#dialog").html(this_obj.attr('id'));
 		    	$("#dialog").dialog( "open" );
 		    });
-		    $(document).click(function(e) {
+		    $(".draggable").click(function(e) {
 		    	var this_obj=getObjSelection(e);
 		    	$("#test").html("click="+$(this_obj).attr('id'));
 		    	setActive(this_obj);
 		    });
-		    $("#div_new").click(function(){
-				var obj1 = "var div1 = new div(div_template);";
-				eval(obj1);
-				console.log(div1.create1());
-				$(div1.create1()).appendTo((div_template.parent=='')?"body":$("#"+div_template.parent));
-			});
 		    $("#input_text_new").click(function(){
-				var obj1 = "var div1 = new div(input_text_template);";
-				eval(obj1);
-				console.log(div1.create1());
-				$(div1.create1()).appendTo((input_text_template.parent=='')?"body":$("#"+input_text_template.parent));
+				input_text_template.prop.attr.id=undefined;
+				let this_id=registerObject(input_text_template.type,input_text_template.prop.attr.id);
+				input_text_template.prop.attr.id=this_id;
+				input_text_template.caption=this_id;
+				let newDwardObj = "var "+this_id+" = new dwardObj(input_text_template);";
+				eval(newDwardObj);
+				let this_obj=eval(this_id).create1()
+				if ($(active_object).attr("objectType")=='div'){
+					$(this_obj).appendTo(active_object);
+				}else{
+					if ($(active_object).attr("objectType")==undefined){
+						$(this_obj).appendTo((input_text_template.parent=='')?"body":$("#"+input_text_template.parent));
+					}else{
+						$(this_obj).insertAfter($(active_object));
+					}
+				}
+				active_object=this_obj;
+				setActive(active_object);
 			});
 		    $("#btn_new").click(function(){
-				var obj1 = "var div1 = new div(btn_template);";
+				var obj1 = "var div1 = new dwardObj(btn_template);";
 				eval(obj1);
 				console.log(div1.create1());
 				$(div1.create1()).appendTo((btn_template.parent=='')?"body":$("#"+btn_template.parent));
@@ -260,6 +277,7 @@ $("#moving_object").html(drag_object);
 		function setActive(obj){
 			$("*").removeClass("draged");
 			$(obj).addClass("draged");
+			active_object=obj;
 			//alert("onclick="+$(obj).attr("id"));
 		}
 		function getObjSelection(e){
