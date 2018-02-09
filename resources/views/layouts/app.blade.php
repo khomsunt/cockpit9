@@ -16,6 +16,8 @@
   <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/tether.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
+    {!! Charts::styles() !!}
+        {!! Charts::assets() !!}
 
 </head>
 <body>
@@ -60,7 +62,7 @@
                                     </li>
                                     </ul>
                                 </li>
-                                <li><a href="#">Another action</a></li>
+                                <li><a href="{{url('/charts')}}">Charts</a></li>
                                 <li><a href="#">Something else here</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#">Separated link</a></li>

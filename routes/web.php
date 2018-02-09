@@ -36,3 +36,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/typebooks','TypeBooksController@index')->name('typebooks');
 Route::get('/typebooks/destroy/{id}','TypeBooksController@destroy');
+
+Route::get('charts', 'chartController@index');
